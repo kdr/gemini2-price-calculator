@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -18,46 +19,38 @@ interface PriceData {
 const PRICE_DATA: PriceData = {
   "gemini-2-flash": {
     regular: {
-      text: 0.075,
-      image: 0.0003870,
-      video: 0.0000774,
-      audio: 0.000050,
-      output: 0.30,
-    },
-    batch: {
       text: 0.0375,
       image: 0.0001935,
       video: 0.0000387,
       audio: 0.000025,
       output: 0.15,
     },
+    batch: {
+      text: 0.01875,
+      image: 0.0000968,
+      video: 0.0000194,
+      audio: 0.0000125,
+      output: 0.075,
+    },
   },
   "gemini-2-flash-lite": {
     regular: {
-      text: 0.0375,
-      image: 0.0001935,
-      video: 0.0000387,
-      audio: 0.0000038,
-      output: 0.15,
-    },
-    batch: {
       text: 0.01875,
       image: 0.0000968,
       video: 0.0000194,
       audio: 0.0000019,
       output: 0.075,
     },
+    batch: {
+      text: 0.009375,
+      image: 0.0000484,
+      video: 0.0000097,
+      audio: 0.0000009,
+      output: 0.0375,
+    },
   },
   "gemini-1-5-flash": {
     regular: {
-      text: 0.0000375,
-      image: 0.00004,
-      video: 0.00004,
-      audio: 0.000004,
-      output: 0.00015,
-      training: 16,
-    },
-    batch: {
       text: 0.0000188,
       image: 0.00002,
       video: 0.00002,
@@ -65,23 +58,31 @@ const PRICE_DATA: PriceData = {
       output: 0.000075,
       training: 8,
     },
+    batch: {
+      text: 0.0000375,
+      image: 0.00004,
+      video: 0.00004,
+      audio: 0.000004,
+      output: 0.00015,
+      training: 16,
+    },
   },
   "gemini-1-5-pro": {
     regular: {
+      text: 0.0003125,
+      image: 0.00032875,
+      video: 0.00032875,
+      audio: 0.0000313,
+      output: 0.00125,
+      training: 80,
+    },
+    batch: {
       text: 0.000625,
       image: 0.0006575,
       video: 0.0006575,
       audio: 0.0000625,
       output: 0.0025,
       training: 160,
-    },
-    batch: {
-      text: 0.0003125,
-      image: 0.0003288,
-      video: 0.0003288,
-      audio: 0.0000313,
-      output: 0.00125,
-      training: 80,
     },
   },
 };
