@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -100,9 +99,9 @@ const PriceCalculator = () => {
   });
   const [units, setUnits] = useState({
     text: "K",
-    image: "",
-    video: "",
-    audio: "",
+    image: "units",
+    video: "units",
+    audio: "units",
     output: "K",
     training: "M",
   });
@@ -171,7 +170,7 @@ const PriceCalculator = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Units</SelectItem>
+                <SelectItem value="units">Units</SelectItem>
                 <SelectItem value="K">K</SelectItem>
                 <SelectItem value="M">M</SelectItem>
               </SelectContent>
