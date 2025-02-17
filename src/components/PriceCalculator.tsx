@@ -116,14 +116,25 @@ const PriceCalculator = () => {
     }
   }, [selectedModel, isGemini15Model]);
 
-  const getUnitMultiplier = (unit: string) => {
-    switch (unit) {
-      case "M":
-        return 1000000;
-      case "K":
-        return 1000;
-      default:
-        return 1;
+  const getUnitMultiplier = (unit: string, type: InputType) => {
+    if (type === "text" || type === "output") {
+      switch (unit) {
+        case "M":
+          return 1;
+        case "K":
+          return 0.001;
+        default:
+          return 0.000001;
+      }
+    } else {
+      switch (unit) {
+        case "M":
+          return 1000000;
+        case "K":
+          return 1000;
+        default:
+          return 1;
+      }
     }
   };
 
@@ -133,13 +144,12 @@ const PriceCalculator = () => {
 
     Object.entries(inputs).forEach(([type, value]) => {
       if (prices[type as InputType] && value) {
-        const multiplier = getUnitMultiplier(units[type as InputType]);
+        const multiplier = getUnitMultiplier(units[type as InputType], type as InputType);
         cost += (value * multiplier) * (prices[type as InputType] || 0);
       }
     });
 
     cost *= numberOfRequests;
-
     setTotalCost(cost);
   }, [selectedModel, inputs, useBatchAPI, units, numberOfRequests]);
 
@@ -159,6 +169,20 @@ const PriceCalculator = () => {
 
   const renderInput = (type: InputType, label: string, showUnits = true) => {
     if (!PRICE_DATA[selectedModel].regular[type]) return null;
+
+    const isTextType = type === "text" || type === "output";
+    const pricePerUnit = useBatchAPI ? PRICE_DATA[selectedModel].batch[type] : PRICE_DATA[selectedModel].regular[type];
+    
+    let unitDescription = "";
+    if (isTextType) {
+      unitDescription = "1M characters";
+    } else if (type === "training") {
+      unitDescription = "M tokens";
+    } else if (type === "video" || type === "audio") {
+      unitDescription = "second";
+    } else {
+      unitDescription = "unit";
+    }
 
     return (
       <div className="space-y-2">
@@ -189,8 +213,7 @@ const PriceCalculator = () => {
           )}
         </div>
         <div className="text-sm text-gray-500">
-          ${useBatchAPI ? PRICE_DATA[selectedModel].batch[type] : PRICE_DATA[selectedModel].regular[type]} per{" "}
-          {type === "text" || type === "output" ? "1K characters" : type === "training" ? "M tokens" : type === "video" || type === "audio" ? "second" : "unit"}
+          ${pricePerUnit} per {unitDescription}
         </div>
       </div>
     );
