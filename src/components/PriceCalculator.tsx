@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -108,6 +107,14 @@ const PriceCalculator = () => {
   });
   const [totalCost, setTotalCost] = useState(0);
 
+  const isGemini15Model = selectedModel.includes("1-5");
+
+  useEffect(() => {
+    if (isGemini15Model) {
+      setUseBatchAPI(false);
+    }
+  }, [selectedModel, isGemini15Model]);
+
   const getUnitMultiplier = (unit: string) => {
     switch (unit) {
       case "M":
@@ -203,13 +210,15 @@ const PriceCalculator = () => {
             </SelectContent>
           </Select>
         </div>
-        <div className="flex items-center space-x-2">
-          <Label>Use Batch API</Label>
-          <Switch
-            checked={useBatchAPI}
-            onCheckedChange={setUseBatchAPI}
-          />
-        </div>
+        {!isGemini15Model && (
+          <div className="flex items-center space-x-2">
+            <Label>Use Batch API</Label>
+            <Switch
+              checked={useBatchAPI}
+              onCheckedChange={setUseBatchAPI}
+            />
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
