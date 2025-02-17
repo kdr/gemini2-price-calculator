@@ -89,6 +89,7 @@ const PRICE_DATA: PriceData = {
 const PriceCalculator = () => {
   const [selectedModel, setSelectedModel] = useState<ModelType>("gemini-2-flash");
   const [useBatchAPI, setUseBatchAPI] = useState(false);
+  const [numberOfRequests, setNumberOfRequests] = useState(1);
   const [inputs, setInputs] = useState({
     text: 0,
     image: 0,
@@ -137,8 +138,10 @@ const PriceCalculator = () => {
       }
     });
 
+    cost *= numberOfRequests;
+
     setTotalCost(cost);
-  }, [selectedModel, inputs, useBatchAPI, units]);
+  }, [selectedModel, inputs, useBatchAPI, units, numberOfRequests]);
 
   const handleInputChange = (type: InputType, value: string) => {
     setInputs(prev => ({
@@ -219,6 +222,21 @@ const PriceCalculator = () => {
             />
           </div>
         )}
+      </div>
+
+      <div className="space-y-2">
+        <Label>Number of Requests</Label>
+        <Input
+          type="number"
+          min="1"
+          step="1"
+          value={numberOfRequests}
+          onChange={(e) => setNumberOfRequests(Math.max(1, parseInt(e.target.value) || 1))}
+          className="w-full md:w-[200px]"
+        />
+        <div className="text-sm text-gray-500">
+          Total cost will be multiplied by the number of requests
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
