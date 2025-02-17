@@ -1,11 +1,20 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { Card } from "@/components/ui/card";
+import PriceCalculator from "@/components/PriceCalculator";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="space-y-6">
+          <div className="text-center space-y-2">
+            <h1 className="text-4xl font-bold tracking-tight">Model Price Calculator</h1>
+            <p className="text-gray-500">Calculate costs for different Gemini models and input types</p>
+          </div>
+          <Card className="p-6">
+            <PriceCalculator />
+          </Card>
+        </div>
       </div>
     </div>
   );
