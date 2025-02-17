@@ -109,6 +109,7 @@ const PriceCalculator = () => {
   const [totalCost, setTotalCost] = useState(0);
 
   const isGemini15Model = selectedModel.includes("1-5");
+  const isGemini20Model = selectedModel.includes("2-flash");
 
   useEffect(() => {
     if (isGemini15Model) {
@@ -172,6 +173,7 @@ const PriceCalculator = () => {
 
     const isTextType = type === "text" || type === "output";
     const pricePerUnit = useBatchAPI ? PRICE_DATA[selectedModel].batch[type] : PRICE_DATA[selectedModel].regular[type];
+    const isGemini20Model = selectedModel.includes("2-flash");
     
     let unitDescription = "";
     if (isTextType) {
@@ -214,6 +216,11 @@ const PriceCalculator = () => {
         </div>
         <div className="text-sm text-gray-500">
           ${pricePerUnit} per {unitDescription}
+          {isGemini20Model && type === "video" && (
+            <div className="mt-1 text-amber-600">
+              Note: If video contains audio, you will be billed for audio processing as well
+            </div>
+          )}
         </div>
       </div>
     );
