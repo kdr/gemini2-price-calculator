@@ -285,6 +285,19 @@ const PriceCalculator = () => {
         </div>
         <div className="text-xl font-bold">${totalCost.toFixed(6)}</div>
       </div>
+
+      <div className="text-sm text-gray-500 text-center">
+        Prices based on{" "}
+        <a 
+          href="https://cloud.google.com/vertex-ai/generative-ai/pricing#modality-based-pricing" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:text-blue-800 underline"
+        >
+          Google Cloud Vertex AI Pricing
+        </a>
+        {" "}accessed on Feb 16, 2025
+      </div>
     </div>
   );
 };
