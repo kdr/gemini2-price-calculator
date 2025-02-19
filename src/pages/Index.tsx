@@ -8,7 +8,7 @@ const Index = () => {
       <div className="max-w-4xl mx-auto">
         <div className="space-y-6">
           <div className="text-center space-y-2">
-            <h1 className="text-4xl font-bold tracking-tight">Gemini Price Calculator</h1>
+            <h1 className="text-4xl font-bold tracking-tight">Vertex AI Gemini Price Calculator</h1>
             <p className="text-gray-500">Calculate costs for different Gemini models and input types</p>
           </div>
           <Card className="p-6">
