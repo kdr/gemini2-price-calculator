@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Calculator } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 
 type ModelType = "gemini-2-flash" | "gemini-2-flash-lite" | "gemini-1-5-flash" | "gemini-1-5-pro";
 type InputType = "text" | "image" | "video" | "audio" | "output" | "training";
@@ -87,24 +88,37 @@ const PRICE_DATA: PriceData = {
 };
 
 const PriceCalculator = () => {
-  const [selectedModel, setSelectedModel] = useState<ModelType>("gemini-2-flash");
-  const [useBatchAPI, setUseBatchAPI] = useState(false);
-  const [numberOfRequests, setNumberOfRequests] = useState(1);
-  const [inputs, setInputs] = useState({
-    text: 0,
-    image: 0,
-    video: 0,
-    audio: 0,
-    output: 0,
-    training: 0,
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedModel, setSelectedModel] = useState<ModelType>(() => 
+    (searchParams.get("model") as ModelType) || "gemini-2-flash"
+  );
+  const [useBatchAPI, setUseBatchAPI] = useState(() => 
+    searchParams.get("batch") === "true"
+  );
+  const [numberOfRequests, setNumberOfRequests] = useState(() => 
+    parseInt(searchParams.get("requests") || "1")
+  );
+  const [inputs, setInputs] = useState(() => {
+    const savedInputs = {
+      text: parseFloat(searchParams.get("text") || "0"),
+      image: parseFloat(searchParams.get("image") || "0"),
+      video: parseFloat(searchParams.get("video") || "0"),
+      audio: parseFloat(searchParams.get("audio") || "0"),
+      output: parseFloat(searchParams.get("output") || "0"),
+      training: parseFloat(searchParams.get("training") || "0"),
+    };
+    return savedInputs;
   });
-  const [units, setUnits] = useState({
-    text: "K",
-    image: "units",
-    video: "units",
-    audio: "units",
-    output: "K",
-    training: "M",
+  const [units, setUnits] = useState(() => {
+    const savedUnits = {
+      text: searchParams.get("textUnit") || "K",
+      image: searchParams.get("imageUnit") || "units",
+      video: searchParams.get("videoUnit") || "units",
+      audio: searchParams.get("audioUnit") || "units",
+      output: searchParams.get("outputUnit") || "K",
+      training: searchParams.get("trainingUnit") || "M",
+    };
+    return savedUnits;
   });
   const [totalCost, setTotalCost] = useState(0);
 
@@ -116,6 +130,24 @@ const PriceCalculator = () => {
       setUseBatchAPI(false);
     }
   }, [selectedModel, isGemini15Model]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    
+    params.set("model", selectedModel);
+    if (useBatchAPI) params.set("batch", "true");
+    
+    params.set("requests", numberOfRequests.toString());
+    
+    Object.entries(inputs).forEach(([key, value]) => {
+      if (value > 0) {
+        params.set(key, value.toString());
+        params.set(`${key}Unit`, units[key as keyof typeof units]);
+      }
+    });
+    
+    setSearchParams(params, { replace: true });
+  }, [selectedModel, useBatchAPI, numberOfRequests, inputs, units, setSearchParams]);
 
   const getUnitMultiplier = (unit: string, type: InputType) => {
     if (type === "text" || type === "output") {
